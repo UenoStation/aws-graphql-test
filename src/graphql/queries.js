@@ -6,12 +6,11 @@ export const getInfluencer = `query GetInfluencer($id: ID!) {
     id
     name
     handle
-    tags
   }
 }
 `;
 export const listInfluencers = `query ListInfluencers(
-  $filter: TableInfluencerFilterInput
+  $filter: ModelInfluencerFilterInput
   $limit: Int
   $nextToken: String
 ) {
@@ -20,7 +19,6 @@ export const listInfluencers = `query ListInfluencers(
       id
       name
       handle
-      tags
     }
     nextToken
   }

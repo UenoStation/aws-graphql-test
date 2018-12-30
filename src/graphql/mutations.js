@@ -6,7 +6,6 @@ export const createInfluencer = `mutation CreateInfluencer($input: CreateInfluen
     id
     name
     handle
-    tags
   }
 }
 `;
@@ -15,7 +14,6 @@ export const updateInfluencer = `mutation UpdateInfluencer($input: UpdateInfluen
     id
     name
     handle
-    tags
   }
 }
 `;
@@ -24,7 +22,6 @@ export const deleteInfluencer = `mutation DeleteInfluencer($input: DeleteInfluen
     id
     name
     handle
-    tags
   }
 }
 `;

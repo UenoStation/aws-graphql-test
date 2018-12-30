@@ -23,8 +23,7 @@ class AddInfluencerView extends Component {
         super(props);
         this.state = {
             name: '',
-            handle: '',
-            tags: []
+            handle: ''
         }
     }
 
