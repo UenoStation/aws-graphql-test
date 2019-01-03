@@ -23,6 +23,7 @@ const Input = props => {
             placeholder={props.placeholder}
             type={props.type || 'text'}
             onChange={(e) => props.onInputChange(props.name, e.currentTarget.value)}
+            value={props.value || ''}
         />
     )
 }

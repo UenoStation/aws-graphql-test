@@ -1,22 +1,15 @@
 import React, { Component } from 'react';
 import { API, graphqlOperation } from 'aws-amplify';
-import styled from 'styled-components';
 
 // components
-import Input from '../components/Input';
 import Button from '../components/DefaultButton';
+import Input from '../components/Input';
+import Container from '../components/SectionContainer';
 
 // graph
 import * as mutations from '../graphql/mutations';
 
-const Container = styled.section`
-background-color: black;
-color: #efefef;
-display: flex;
-flex-flow: row nowrap;
-padding: 30px;
-width: 100%;
-`;
+
 
 class AddInfluencerView extends Component {
     constructor(props) {

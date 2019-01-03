@@ -17,12 +17,11 @@ const InfluencerList = props => {
     return (
         <Container>
             {
-                props.items.map(({ name, handle, tags }) => {
+                props.data.map(({ id, name, handle }) => {
                     return (
-                        <Panel key={name}>
-                            <div>{name}</div>
-                            <div>{handle}</div>
-                            <div>{tags}</div>
+                        <Panel key={name} onClick={(e) => props.handleSelected(id)}>
+                            <h3>{name}</h3>
+                            <h5>{handle}</h5>
                         </Panel>
                     )
                 })
