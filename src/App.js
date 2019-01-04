@@ -22,9 +22,11 @@ Amplify.configure(aws_config);
 
 class App extends Component {
   state = {
+    isEditView: false,
     influencers: [],
+    name: '',
+    handle: '',
     selected: null,
-    isEditView: false
   }
   createInfluencerSubscription;
   updateInfluencerSubscription;
@@ -37,7 +39,7 @@ class App extends Component {
             ...this.state.influencers,
             eventData.value.data.onCreateInfluencer
           ];
-          this.setState({ influencers: influencers });
+          this.setState(Object.assign(this.state, { influencers: influencers }));
         },
         error: (err) => console.log(err)
       });
@@ -68,7 +70,10 @@ class App extends Component {
     // unmount component here
   }
 
-  onHandleChange = (name, val) => {
+  onHandleAddInfluencerChange = (name, val) => {
+    this.setState(Object.assign(this.state, { [name]: val }));
+  }
+  onHandleSelectedChange = (name, val) => {
     const selected = Object.assign(this.state.selected, { [name]: val });
     this.setState(Object.assign(this.state, { selected }));
   }
@@ -83,6 +88,12 @@ class App extends Component {
       }
     });
   }
+  onHandleAddInfluencer = () => {
+    const obj = { name: this.state.name, handle: this.state.handle };
+    API.graphql(graphqlOperation(mutations.createInfluencer, { input: obj }))
+      .then(resp => console.log('-- Add Influencer SUCCESS --', resp))
+      .catch(err => console.log(err));
+  }
   onHandleUpdateInfluencer = () => {
     API.graphql(graphqlOperation(mutations.updateInfluencer, { input: this.state.selected }))
       .then(resp => console.log('-- Update Influencer SUCCESS --', resp))
@@ -91,19 +102,24 @@ class App extends Component {
   toggleEdit = () => this.setState({ isEditView: !this.state.isEditView })
 
   render() {
-
+    const { handle, influencers, name, selected } = this.state
     return (
       <div className="App">
-        <AddInfluencerView />
+        <AddInfluencerView
+          name={name}
+          handle={handle}
+          handleChange={this.onHandleAddInfluencerChange}
+          handleSubmit={this.onHandleAddInfluencer}
+        />
         {this.state.selected &&
           <EditInfluencerView
-            influencer={this.state.selected}
-            handleChange={this.onHandleChange}
+            influencer={selected}
+            handleChange={this.onHandleSelectedChange}
             handleUpdate={this.onHandleUpdateInfluencer}
           />
         }
         <InfluencerListView
-          data={this.state.influencers}
+          data={influencers}
           handleSelected={(id) => this.onHandleSelected(id)}
         />
       </div>
