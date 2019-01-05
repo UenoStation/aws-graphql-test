@@ -1,11 +1,12 @@
 import React from 'react';
 import styled from 'styled-components';
+import '../style/vars.css';
 
 const Button = styled.button`
 background-color: ${props => props.reverse ? "transparent" : "white"};
 border: 1px solid #e5e5e5;
 box-sizing: border-box;
-color: ${props => props.reverse ? "#e5e5e5" : "black"};
+color: ${props => props.reverse ? 'var(--button-color-reverse)' : 'var(--button-color)'};
 font-weight: bold;
 padding: 0 30px;
 margin: 0;
@@ -26,7 +27,7 @@ text-transform: uppercase;
     background-color: transparent;
     border: 1px solid;
     border-color: #b2b2b2;
-    color: #222;
+    color: ${props => props.reverse ? 'var(--button-color-hover-reverse)' : 'var(--button-color-hover)'};
     cursor: pointer;
 }
 `;

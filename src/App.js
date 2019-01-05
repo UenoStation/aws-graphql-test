@@ -16,7 +16,6 @@ import EditInfluencerView from './views/EditInfluencerView';
 
 Amplify.configure(aws_config);
 
-// TODO: [AddInfluencerView] : Need to move input change up to app level
 // TODO: [App] : Move subscription handler logic to separate file
 // TODO: Update subscription handler needs to be simplified and remove '__typename' attribute 
 
@@ -34,37 +33,40 @@ class App extends Component {
   componentDidMount = async () => {
     this.createInfluencerSubscription = await API.graphql(graphqlOperation(subscriptions.onCreateInfluencer))
       .subscribe({
-        next: (eventData) => {
-          let influencers = [
-            ...this.state.influencers,
-            eventData.value.data.onCreateInfluencer
-          ];
-          this.setState(Object.assign(this.state, { influencers: influencers }));
-        },
+        next: this.handleInfluencerSubscriptionUpdate,
         error: (err) => console.log(err)
       });
 
     this.updateInfluencerSubscription = await API.graphql(graphqlOperation(subscriptions.onUpdateInfluencer))
       .subscribe({
-        next: (eventData) => {
-          const newInfluencer = eventData.value.data.onUpdateInfluencer;
-          let index = this.state.influencers.findIndex(i => i['id'] === newInfluencer.id);
-          let clone = this.state.influencers.slice();
-          clone[index] = newInfluencer;
-          this.setState(
-            Object.assign(this.state,
-              {
-                influencers: [
-                  ...clone
-                ]
-              }))
-        },
+        next: this.handleInfluencerSubscriptionUpdate,
         error: (err) => console.log(err)
       });
 
     API.graphql(graphqlOperation(queries.listInfluencers))
       .then(resp => this.setState({ influencers: resp.data.listInfluencers.items }))
       .catch(err => console.log(err));
+  }
+
+  handleInfluencerSubscriptionUpdate = ({ value: { data } }) => {
+    if (data['onUpdateInfluencer']) {
+      let index = this.state.influencers.findIndex(i => i['id'] === data['onUpdateInfluencer'].id);
+      let clone = this.state.influencers.slice();
+      clone[index] = data['onUpdateInfluencer'];
+      this.setState(
+        Object.assign(this.state,
+          {
+            influencers: [
+              ...clone
+            ]
+          }))
+    } else {
+      let influencers = [
+        ...this.state.influencers,
+        data['onCreateInfluencer']
+      ];
+      this.setState(Object.assign(this.state, { influencers: influencers }));
+    }
   }
   componentWillUnmount() {
     // unmount component here
@@ -79,14 +81,7 @@ class App extends Component {
   }
   onHandleSelected = iid => {
     const influencer = this.state.influencers.find((i) => i['id'] === iid);
-    const { id, name, handle } = influencer;
-    this.setState({
-      selected: {
-        id,
-        name,
-        handle
-      }
-    });
+    this.setState({selected: {...influencer}});
   }
   onHandleAddInfluencer = () => {
     const obj = { name: this.state.name, handle: this.state.handle };
